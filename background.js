@@ -45,6 +45,68 @@ chrome.runtime.onConnect.addListener((port) => {
             port.postMessage({ loggedIn: false });
         } else if (request.action === "checkLoginStatus") {
             port.postMessage({ loggedIn: loggedIn });
+        } else if (request.action === "createDoc") {
+            chrome.identity.getAuthToken({ interactive: false }, (token) => {
+                if (chrome.runtime.lastError) {
+                    console.error(chrome.runtime.lastError);
+                } else {
+                    createGoogleDoc(token, (response) => {
+                        console.log(response);
+                    });
+                }
+            });
         }
+
     });
 });
+
+function createGoogleDoc(token, callback) {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "https://docs.googleapis.com/v1/documents");
+    xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                callback(JSON.parse(xhr.responseText));
+            } else {
+                console.error(`Error: ${xhr.status}\n${xhr.responseText}`);
+            }
+        }
+    };
+    xhr.send(JSON.stringify({ title: "New Document from Extension" }));
+}
+
+function insertTextToGoogleDoc(token, documentId, text, callback) {
+    const xhr = new XMLHttpRequest();
+    xhr.open(
+        "POST",
+        `https://docs.googleapis.com/v1/documents/${documentId}:batchUpdate`
+    );
+    xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                callback(JSON.parse(xhr.responseText));
+            } else {
+                console.error(`Error: ${xhr.status}\n${xhr.responseText}`);
+            }
+        }
+    };
+    xhr.send(
+        JSON.stringify({
+            requests: [
+                {
+                    insertText: {
+                        location: {
+                            index: 1,
+                        },
+                        text: text,
+                    },
+                },
+            ],
+        })
+    );
+}
+

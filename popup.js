@@ -28,3 +28,7 @@ function showLoggedOutState() {
 
 
 port.postMessage({ action: "checkLoginStatus" });
+
+document.getElementById("createDoc").addEventListener("click", () => {
+    port.postMessage({ action: "createDoc" });
+});
