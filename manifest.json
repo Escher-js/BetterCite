@@ -1,0 +1,38 @@
+{
+    "name": "sampleApp",
+    "version": "1.0.0",
+    "permissions": [
+        "contextMenus",
+        "tabs",
+        "activeTab"
+    ],
+    "oauth2": {
+        "client_id": "1859181707-cmecvlvr1rnlmt4a8i1tk0eda5nsvi8n.apps.googleusercontent.com",
+        "scopes": [
+            "https://www.googleapis.com/auth/documents",
+            "https://www.googleapis.com/auth/drive.file"
+        ]
+    },
+    "action": {
+        "default_icon": {
+            "16": "icon.png",
+            "48": "icon.png",
+            "128": "icon.png"
+        },
+        "default_popup": "popup.html"
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "manifest_version": 3,
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "contentScript.js"
+            ]
+        }
+    ]
+}
