@@ -1,11 +1,15 @@
-document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('signInButton').addEventListener('click', function () {
-        chrome.identity.getAuthToken({ interactive: true }, function (token) {
-            if (chrome.runtime.lastError) {
-                alert('An error occurred: ' + chrome.runtime.lastError.message);
-            } else {
-                alert('Logged in successfully.');
-            }
-        });
-    });
+document.getElementById('authorize_button').onclick = function () {
+    chrome.runtime.sendMessage({ action: 'authorize' });
+};
+
+document.getElementById('signout_button').onclick = function () {
+    chrome.runtime.sendMessage({ action: 'signout' });
+};
+
+chrome.runtime.sendMessage({ action: 'checkAuth' }, (response) => {
+    if (response.isAuthorized) {
+        document.getElementById('signout_button').style.display = 'block';
+    } else {
+        document.getElementById('authorize_button').style.display = 'block';
+    }
 });
