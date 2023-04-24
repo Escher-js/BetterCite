@@ -1,35 +1,3 @@
-const API_KEY = "YOUR_API_KEY"; // Replace with your API Key
-const DISCOVERY_DOCS = ["https://docs.googleapis.com/$discovery/rest?version=v1"];
-const SCOPES = "https://www.googleapis.com/auth/documents";
-
-function loadGoogleDocsApi() {
-    return new Promise((resolve, reject) => {
-        gapi.load("client", {
-            callback: resolve,
-            onerror: reject,
-            timeout: 1000,
-            ontimeout: reject,
-        });
-    });
-}
-
-async function initGoogleDocsApi() {
-    try {
-        await loadGoogleDocsApi();
-        gapi.client.init({
-            apiKey: API_KEY,
-            discoveryDocs: DISCOVERY_DOCS,
-            clientId: YOUR_CLIENT_ID, // Replace with your Client ID
-            scope: SCOPES,
-        });
-    } catch (e) {
-        console.error("Error initializing Google Docs API", e);
-    }
-}
-
-initGoogleDocsApi();
-
-
 chrome.runtime.onInstalled.addListener(function () {
     chrome.contextMenus.create({
         id: "sendToGoogleDoc",
