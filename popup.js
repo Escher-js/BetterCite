@@ -1,15 +1,30 @@
-document.getElementById('authorize_button').onclick = function () {
-    chrome.runtime.sendMessage({ action: 'authorize' });
-};
+const port = chrome.runtime.connect({ name: "popup" });
 
-document.getElementById('signout_button').onclick = function () {
-    chrome.runtime.sendMessage({ action: 'signout' });
-};
+document.getElementById("login").addEventListener("click", () => {
+    port.postMessage({ action: "login" });
+});
 
-chrome.runtime.sendMessage({ action: 'checkAuth' }, (response) => {
-    if (response.isAuthorized) {
-        document.getElementById('signout_button').style.display = 'block';
+document.getElementById("logout").addEventListener("click", () => {
+    port.postMessage({ action: "logout" });
+});
+
+port.onMessage.addListener((response) => {
+    if (response.loggedIn) {
+        showLoggedInState();
     } else {
-        document.getElementById('authorize_button').style.display = 'block';
+        showLoggedOutState();
     }
 });
+
+function showLoggedInState() {
+    document.getElementById("login").hidden = true;
+    document.getElementById("logout").hidden = false;
+}
+
+function showLoggedOutState() {
+    document.getElementById("login").hidden = false;
+    document.getElementById("logout").hidden = true;
+}
+
+
+port.postMessage({ action: "checkLoginStatus" });

@@ -3,14 +3,6 @@
     "name": "Text to Google Doc",
     "version": "1.0",
     "description": "A Chrome extension to send selected text to a Google Doc",
-    "browser_action": {
-        "default_popup": "popup.html",
-        "default_icon": {
-            "16": "icon.png",
-            "48": "icon.png",
-            "128": "icon.png"
-        }
-    },
     "permissions": [
         "contextMenus",
         "activeTab",
@@ -19,11 +11,15 @@
         "https://www.googleapis.com/auth/drive.file"
     ],
     "oauth2": {
-        "client_id": "1859181707-cmecvlvr1rnlmt4a8i1tk0eda5nsvi8n.apps.googleusercontent.com",
+        "client_id": "1859181707-79v3kpjnuu39mlgenkeuecfdp8dis6th.apps.googleusercontent.com",
         "scopes": [
             "https://www.googleapis.com/auth/documents",
-            "https://www.googleapis.com/auth/drive.file"
+            "https://www.googleapis.com/auth/userinfo.profile"
         ]
+    },
+    "browser_action": {
+        "default_icon": "icon.png",
+        "default_popup": "popup.html"
     },
     "background": {
         "scripts": [
