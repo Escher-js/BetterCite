@@ -15,12 +15,25 @@ chrome.contextMenus.onClicked.addListener(function (info, tab) {
             if (chrome.runtime.lastError) {
                 console.error(chrome.runtime.lastError);
             } else {
-                // Display the selected text in an alert dialog
-                alert("Selected text: " + response.text);
+                // Get the access token and insert the text into the Google Doc
+                chrome.identity.getAuthToken({ interactive: false }, (token) => {
+                    if (chrome.runtime.lastError) {
+                        console.error(chrome.runtime.lastError);
+                    } else {
+                        const textToInsert = response.text + "\n\nURL: " + info.pageUrl + "\n\n";
+                        createGoogleDoc(token, (docResponse) => {
+                            const documentId = docResponse.documentId;
+                            insertTextToGoogleDoc(token, documentId, textToInsert, (insertResponse) => {
+                                console.log("Text inserted successfully");
+                            });
+                        });
+                    }
+                });
             }
         });
     }
 });
+
 
 let loggedIn = false;
 
